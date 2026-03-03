@@ -8,23 +8,34 @@ import java.util.Map;
 public class Response {
     private BufferedWriter out;
     private Map<String, String> responseMap;
-    private HttpStatus code ;
     private String contentType;
-    private String body ="";
+    private HttpStatus code;
 
     public Response(BufferedWriter out) {
         this.out = out;
         this.responseMap = new HashMap<>();
     }
 
-    public Response status(HttpStatus code) throws IOException {
+    public Response status(HttpStatus code) {
         this.code = code;
-        this.responseMap.put("Status", "HTTP/1.1 " + this.code.getDetails());
+        this.responseMap.put("Status", "HTTP/1.1 " + code.getDetails());
         return this;
     }
 
+    public void sendStatus(HttpStatus code) throws IOException {
+        this.status(HttpStatus.HTTP_200).build();
+    }
+
+    public void send(String body) throws IOException {
+        if(this.code == null){
+            this.status(HttpStatus.HTTP_200);
+        }
+        this.responseMap.put("Body", body);
+        this.build();
+    }
+
     public void build() throws IOException {
-        if(this.body.isEmpty()){
+        if(!this.responseMap.containsKey("Body")){
             this.responseMap.put("Content-Type", "text/plain");
             this.responseMap.put("Content-Length", String.valueOf(this.code.getDetails().length()));
             this.responseMap.put("Body", this.code.getDetails());

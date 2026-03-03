@@ -9,7 +9,7 @@ public class Main {
             res.status(HTTP_200).build();
         });
 
-        app.get("/home/<param>/", (req, res) -> {
+        app.get("/msg/{id}", (req, res) -> {
             res.status(HTTP_200).build();
         });
 

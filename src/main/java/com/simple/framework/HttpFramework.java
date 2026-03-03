@@ -13,7 +13,6 @@ public class HttpFramework {
     private int port = 8080;
     private HttpParser parser;
 
-
     public HttpFramework(){
         this.parser = new HttpParser();
     }
@@ -39,11 +38,8 @@ public class HttpFramework {
                 Handler serverHandler = this.endpointHandlers.get(endpoint);
                 serverHandler.execute(req, res);
             } else {
-                res.status(HTTP_404);
+                res.status(HTTP_404).build();
             }
-
-
-
         } catch (IOException e){
             System.out.println("IOException: " + e.getMessage());
         }

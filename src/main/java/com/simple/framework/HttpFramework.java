@@ -38,7 +38,7 @@ public class HttpFramework {
                 Handler serverHandler = this.endpointHandlers.get(endpoint);
                 serverHandler.execute(req, res);
             } else {
-                res.status(HTTP_404).build();
+                res.sendStatus(HTTP_404);
             }
         } catch (IOException e){
             System.out.println("IOException: " + e.getMessage());

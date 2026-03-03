@@ -6,7 +6,7 @@ public class Main {
         HttpFramework app = new HttpFramework();
 
         app.get("/", (req, res) -> {
-            res.status(HTTP_404).send("labubu");
+            res.sendHTML("index.html");
         });
 
         app.get("/home", (req, res) -> {

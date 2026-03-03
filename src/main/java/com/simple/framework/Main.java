@@ -6,11 +6,15 @@ public class Main {
         HttpFramework app = new HttpFramework();
 
         app.get("/", (req, res) -> {
-            res.status(HTTP_200).build();
+            res.status(HTTP_404).send("labubu");
+        });
+
+        app.get("/home", (req, res) -> {
+            res.send("hey");
         });
 
         app.get("/msg/{id}", (req, res) -> {
-            res.status(HTTP_200).build();
+            res.sendStatus(HTTP_200);
         });
 
         app.listen(4221);

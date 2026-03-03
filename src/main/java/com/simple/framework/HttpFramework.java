@@ -8,18 +8,21 @@ import java.util.Map;
 import static com.simple.framework.HttpStatus.*;
 
 public class HttpFramework {
-    private Map<String, Handler> endpointHandlers = new HashMap<>();
+    private Map<String, Handler> getHandlers;
+    private Map<String, Handler> postHandlers;
     private Map<String, String> requestMap;
     private int port = 8080;
     private HttpParser parser;
 
     public HttpFramework(){
         this.parser = new HttpParser();
+        this.getHandlers = new HashMap<>();
+        this.postHandlers = new HashMap<>();
     }
 
     public void get(String path, Handler serverHandler){
         System.out.println(path);
-        this.endpointHandlers.put(path.trim(), serverHandler);
+        this.getHandlers.put(path.trim(), serverHandler);
     }
 
     public void handleClient(Socket clientSocket){
@@ -29,13 +32,12 @@ public class HttpFramework {
             Response res = new Response(out);
             Request req = new Request();
 
-            String request = this.readRequest(in);
-            this.requestMap = this.parser.parseRequest(request);
+            this.requestMap = this.parser.parseRequest(in);
 
             String endpoint = this.requestMap.get("URL");
 
-            if(this.endpointHandlers.containsKey(endpoint)){
-                Handler serverHandler = this.endpointHandlers.get(endpoint);
+            if(this.getHandlers.containsKey(endpoint)){
+                Handler serverHandler = this.getHandlers.get(endpoint);
                 serverHandler.execute(req, res);
             } else {
                 res.sendStatus(HTTP_404);
@@ -43,17 +45,6 @@ public class HttpFramework {
         } catch (IOException e){
             System.out.println("IOException: " + e.getMessage());
         }
-    }
-
-    public String readRequest(BufferedReader in) throws IOException {
-        StringBuilder request = new StringBuilder();
-        String line;
-        while((line = in.readLine()) != null && !line.isEmpty()){
-            request.append(line);
-            request.append("\r\n");
-        }
-        request.append("\r\n");
-        return request.toString();
     }
 
     public void listen(int port){

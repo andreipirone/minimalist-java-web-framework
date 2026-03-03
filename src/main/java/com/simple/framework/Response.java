@@ -59,7 +59,7 @@ public class Response {
                 }
 
                 this.responseMap.put("Content-Type", "text/html; charset=UTF-8");
-                this.responseMap.put("Content-Length", String.valueOf(htmlFile.length()));
+                this.responseMap.put("Content-Length", String.valueOf(htmlBody.length()));
                 this.responseMap.put("Body", htmlBody.toString());
 
                 this.build();
@@ -95,5 +95,6 @@ public class Response {
         response.append(CRLF).append(this.responseMap.get("Body"));
 
         out.write(response.toString());
+        out.flush();
     }
 }

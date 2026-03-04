@@ -7,6 +7,11 @@ public class Main {
 
         app.get("/", (req, res) -> {
             res.sendHTML("index.html");
+            res.send("app run");
+        });
+
+        app.post("/", (req, res) -> {
+            res.send("info sent");
         });
 
         app.get("/home", (req, res) -> {
@@ -17,6 +22,6 @@ public class Main {
             res.sendStatus(HTTP_200);
         });
 
-        app.listen(4221);
+        app.start(4221);
     }
 }

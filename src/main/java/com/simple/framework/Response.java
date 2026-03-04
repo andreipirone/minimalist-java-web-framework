@@ -1,22 +1,19 @@
 package com.simple.framework;
 
 import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
+import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import static com.simple.framework.HttpStatus.*;
 
 
 public class Response {
-    private BufferedWriter out;
+    private BufferedOutputStream out;
     private Map<String, String> responseMap;
     private String contentType;
     private HttpStatus code;
-    private ClassLoader classLoader;
 
-    public Response(BufferedWriter out) {
+    public Response(BufferedOutputStream out) {
         this.out = out;
         this.responseMap = new LinkedHashMap<>();
     }
@@ -28,23 +25,23 @@ public class Response {
     }
 
     public void sendStatus(HttpStatus code) throws IOException {
-        this.status(HTTP_200).build();
+        this.status(code).build();
     }
 
     public void send(String body) throws IOException {
         if(this.code == null){
             this.code = HTTP_200;
-            this.responseMap.put("Status","HTTP/1.1 " + this.code.getDetails());
+
         }
+        this.responseMap.put("Status","HTTP/1.1 " + this.code.getDetails());
         this.responseMap.put("Content-Type", "text/plain");
-        this.responseMap.put("Content-Length", String.valueOf(body.length()));
+        this.responseMap.put("Content-Length", String.valueOf(body.getBytes(StandardCharsets.UTF_8).length));
         this.responseMap.put("Body", body);
         this.build();
     }
 
     public void sendHTML(String fileName) {
         try(BufferedReader in = new BufferedReader(new FileReader("src/main/resources/" + fileName))){
-            this.classLoader = getClass().getClassLoader();
             File htmlFile = new File("src/main/resources/" + fileName);
             if(htmlFile.exists()){
                 if(this.code == null){
@@ -72,29 +69,37 @@ public class Response {
     }
 
     public void build() throws IOException {
-        if(!this.responseMap.containsKey("Body")){
-            this.responseMap.put("Content-Type", "text/plain");
-            this.responseMap.put("Content-Length", String.valueOf(this.code.getDetails().length()));
-            this.responseMap.put("Body", this.code.getDetails());
-        }
+//        if(!this.responseMap.containsKey("Body")){
+//            this.responseMap.put("Content-Type", "text/plain");
+//            this.responseMap.put("Content-Length", String.valueOf(this.code.getDetails().length()));
+//            this.responseMap.put("Body", this.code.getDetails());
+//        }
 
         StringBuilder response = new StringBuilder();
         String CRLF = "\r\n";
+
+        String status = this.responseMap.get("Status");
+        if (status == null) {
+            // Fallback if send() didn't set it
+            status = "HTTP/1.1 200 OK";
+        }
+        response.append(status).append(CRLF);
+
         for(String key : this.responseMap.keySet()){
-            if(!key.equals("Body")){
-                if(key.equals("Status")){
-                    response.append(this.responseMap.get("Status")).append(CRLF);
-                } else {
-                    response.append(key)
-                            .append(": ")
-                            .append(this.responseMap.get(key))
-                            .append(CRLF);
+            if(!key.equals("Body") && !key.equals("Status")){
+                response.append(key)
+                        .append(": ")
+                        .append(this.responseMap.get(key))
+                        .append(CRLF);
                 }
             }
-        }
-        response.append(CRLF).append(this.responseMap.get("Body"));
 
-        out.write(response.toString());
+        response.append(CRLF);
+        response.append(this.responseMap.get("Body"));
+
+        byte[] rawData = response.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
+
+        out.write(rawData);
         out.flush();
     }
 }

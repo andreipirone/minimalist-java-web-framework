@@ -48,7 +48,7 @@ public class HttpParser {
 
             char[] body = new char[bodySize];
             in.read(body, 0, bodySize);
-            this.requestMap.put("Body", Arrays.toString(body));
+            this.requestMap.put("Body", String.valueOf(body));
         }
 
         return this.requestMap;

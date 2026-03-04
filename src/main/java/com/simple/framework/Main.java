@@ -1,4 +1,6 @@
 package com.simple.framework;
+import java.util.Map;
+
 import static com.simple.framework.HttpStatus.*;
 
 public class Main {
@@ -12,6 +14,7 @@ public class Main {
 
         app.post("/", (req, res) -> {
             res.send("info sent");
+            Map<String, String> body = req.getBody();
         });
 
         app.get("/home", (req, res) -> {

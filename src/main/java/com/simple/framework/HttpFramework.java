@@ -33,10 +33,9 @@ public class HttpFramework {
             BufferedOutputStream out = new BufferedOutputStream(clientSocket.getOutputStream())){
 
             HttpParser parser = new HttpParser();
-            Response res = new Response(out);
-            Request req = new Request();
-
             this.requestMap = parser.parseRequest(in);
+            Response res = new Response(out);
+            Request req = new Request(this.requestMap);
 
             String method = this.requestMap.get("Method");
             String endpoint = this.requestMap.get("URL");

@@ -69,11 +69,11 @@ public class Response {
     }
 
     public void build() throws IOException {
-//        if(!this.responseMap.containsKey("Body")){
-//            this.responseMap.put("Content-Type", "text/plain");
-//            this.responseMap.put("Content-Length", String.valueOf(this.code.getDetails().length()));
-//            this.responseMap.put("Body", this.code.getDetails());
-//        }
+        if(!this.responseMap.containsKey("Body")){
+            this.responseMap.put("Content-Type", "text/plain");
+            this.responseMap.put("Content-Length", String.valueOf(this.code.getDetails().length()));
+            this.responseMap.put("Body", this.code.getDetails());
+        }
 
         StringBuilder response = new StringBuilder();
         String CRLF = "\r\n";

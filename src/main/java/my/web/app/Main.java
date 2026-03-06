@@ -1,4 +1,6 @@
-package com.simple.framework;
+package my.web.app;
+import com.simple.framework.HttpFramework;
+
 import java.util.Map;
 
 public class Main {

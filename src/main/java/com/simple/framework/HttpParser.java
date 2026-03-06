@@ -133,9 +133,4 @@ public class HttpParser {
         }
         return found;
     }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        return super.clone();
-    }
 }

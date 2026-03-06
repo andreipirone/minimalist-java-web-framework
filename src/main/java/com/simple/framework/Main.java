@@ -1,8 +1,6 @@
 package com.simple.framework;
 import java.util.Map;
 
-import static com.simple.framework.HttpStatus.*;
-
 public class Main {
     public static void main( String[] args ) {
         HttpFramework app = new HttpFramework();

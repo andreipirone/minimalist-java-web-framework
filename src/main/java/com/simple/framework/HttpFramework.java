@@ -39,7 +39,9 @@ public class HttpFramework {
         try(BufferedReader in = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
             BufferedOutputStream out = new BufferedOutputStream(clientSocket.getOutputStream())){
 
-            Map<String, String> requestMap = this.parser.parseRequest(in);
+            HttpParser par = new HttpParser(this.parser);
+
+            Map<String, String> requestMap = par.parseRequest(in);
 
             Response res = new Response(out);
             Request req = new Request(requestMap);
@@ -47,26 +49,14 @@ public class HttpFramework {
             String method = requestMap.get("Method");
             String endpoint = requestMap.get("URL");
 
-
-
-//            if(this.getHandlers.containsKey(endpoint) && method.equals("GET")){
-//                Handler serverHandler = this.getHandlers.get(endpoint);
-//                serverHandler.execute(req, res);
-//            } else if(this.postHandlers.containsKey(endpoint) && method.equals("POST")){
-//                Handler serverHandler = this.postHandlers.get(endpoint);
-//                serverHandler.execute(req, res);
-//            } else  {
-//                res.sendStatus(HTTP_404);
-//            }
-
-            if(parser.hasMatch(endpoint, getHandlers) && method.equals("GET")){
-                endpoint = parser.getMatched();
-                req.setParamMap(parser.getParamsMap());
+            if(par.hasMatch(endpoint, getHandlers) && method.equals("GET")){
+                endpoint = par.getMatched();
+                req.setParamMap(par.getParamsMap());
                 Handler serverHandler = this.getHandlers.get(endpoint);
                 serverHandler.execute(req, res);
-            } else if(parser.hasMatch(endpoint, getHandlers) && method.equals("POST")){
-                endpoint = parser.getMatched();
-                req.setParamMap(parser.getParamsMap());
+            } else if(par.hasMatch(endpoint, getHandlers) && method.equals("POST")){
+                endpoint = par.getMatched();
+                req.setParamMap(par.getParamsMap());
                 Handler serverHandler = this.postHandlers.get(endpoint);
                 serverHandler.execute(req, res);
             } else  {

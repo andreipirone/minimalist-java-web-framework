@@ -8,17 +8,23 @@ import java.util.regex.Pattern;
 
 public class HttpParser {
     private Map<String, String> requestMap;
-    private Map<String, String> urlMap;
     private Map<String,String[]> urlVariables = new HashMap<>();
-    private Map<String, String[]> urlValues = new HashMap<>();
     private Map<String, String> paramsMap = new HashMap<>();
     private String endpoint;
 
-
-    private String request;
-
     public HttpParser(){
         this.requestMap = new HashMap<>();
+    }
+
+    public HttpParser(HttpParser other){
+        this.requestMap = new HashMap<>(other.requestMap);
+        this.urlVariables = new HashMap<>();
+        this.paramsMap = new HashMap<>(other.paramsMap);
+        this.endpoint = other.endpoint;
+
+        for (Map.Entry<String, String[]> entry : other.urlVariables.entrySet()) {
+            this.urlVariables.put(entry.getKey(), entry.getValue().clone());
+        }
     }
 
 
@@ -48,7 +54,6 @@ public class HttpParser {
 
         if(this.requestMap.containsKey("Content-Length")){
             int bodySize = Integer.parseInt(this.requestMap.get("Content-Length"));
-            int tempSize = 0;
 
             char[] body = new char[bodySize];
             in.read(body, 0, bodySize);
@@ -57,12 +62,6 @@ public class HttpParser {
 
         return this.requestMap;
     }
-
-
-//    public void parseParams(String url){
-//        String[] paths = url.split("/");
-//        for(path)
-//    }
 
     public String extractParams(String urlTemplate, boolean isInit){
         boolean isNonStatic = false;
@@ -135,4 +134,8 @@ public class HttpParser {
         return found;
     }
 
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

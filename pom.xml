@@ -22,10 +22,15 @@
       <scope>test</scope>
     </dependency>
       <dependency>
-          <groupId>junit</groupId>
-          <artifactId>junit</artifactId>
-          <version>4.12</version>
-          <scope>test</scope>
+          <groupId>org.json</groupId>
+          <artifactId>json</artifactId>
+          <version>20251224</version>
+          <scope>compile</scope>
+      </dependency>
+      <dependency>
+          <groupId>org.postgresql</groupId>
+          <artifactId>postgresql</artifactId>
+          <version>42.7.7</version>
       </dependency>
   </dependencies>
     <build>

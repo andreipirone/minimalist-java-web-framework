@@ -1,5 +1,6 @@
 package com.simple.framework;
 
+import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,8 +20,10 @@ public class Request {
     public Map<String, String> getBody(){
         String body = this.requestMap.get("Body");
         System.out.println(body);
-        if(this.requestMap.get("Content-Type").equals("application/x-www-form-urlencoded")){
+        if(this.requestMap.get("Content-Type").contains("application/x-www-form-urlencoded")){
             this.bodyMap = urlencoded(body);
+        } else if (this.requestMap.get("Content-Type").contains("application/json")) {
+            this.bodyMap = this.json(body);
         }
 
         return this.bodyMap;
@@ -36,6 +39,16 @@ public class Request {
         }
 
         return  tempMap;
+    }
+
+    public Map<String, String> json(String body){
+        Map<String, String> tempMap = new HashMap<>();
+        JSONObject tempJson = new JSONObject(body);
+        for(String key : tempJson.keySet()) {
+            tempMap.put(key, String.valueOf(tempJson.get(key)));
+        }
+
+        return tempMap;
     }
 
     public Map<String, String> getQuery(){

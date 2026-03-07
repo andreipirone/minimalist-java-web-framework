@@ -27,13 +27,13 @@ public class HttpParser {
         }
     }
 
-
     public Map<String, String> parseRequest(BufferedReader in) throws IOException {
         this.requestMap.clear();
 
         String line;
         line = in.readLine();
         String[] firstLine = line.split("\\s+");
+        System.out.println(line);
 
         this.requestMap.put("Method", firstLine[0]);
         String url = firstLine[1];

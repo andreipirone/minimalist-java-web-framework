@@ -4,6 +4,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import org.json.*;
 import static com.simple.framework.HttpStatus.*;
 
 
@@ -31,12 +32,38 @@ public class Response {
     public void send(String body) throws IOException {
         if(this.code == null){
             this.code = HTTP_200;
-
         }
+
         this.responseMap.put("Status","HTTP/1.1 " + this.code.getDetails());
         this.responseMap.put("Content-Type", "text/plain");
         this.responseMap.put("Content-Length", String.valueOf(body.getBytes(StandardCharsets.UTF_8).length));
         this.responseMap.put("Body", body);
+        this.build();
+    }
+
+    public void sendJson(JSONArray body) throws IOException {
+        if(this.code == null){
+            this.code = HTTP_200;
+        }
+        String jsonBody = body.toString();
+        this.responseMap.put("Status","HTTP/1.1 " + this.code.getDetails());
+        this.responseMap.put("Content-Type", "application/json");
+        this.responseMap.put("Content-Length", String.valueOf(jsonBody.getBytes(StandardCharsets.UTF_8).length));
+        this.responseMap.put("Body", jsonBody);
+        System.out.println(jsonBody);
+        this.build();
+    }
+
+    public void sendJson(JSONObject body) throws IOException {
+        if(this.code == null){
+            this.code = HTTP_200;
+        }
+        String jsonBody = body.toString();
+        this.responseMap.put("Status","HTTP/1.1 " + this.code.getDetails());
+        this.responseMap.put("Content-Type", "application/json");
+        this.responseMap.put("Content-Length", String.valueOf(jsonBody.getBytes(StandardCharsets.UTF_8).length));
+        this.responseMap.put("Body", jsonBody);
+        System.out.println(jsonBody);
         this.build();
     }
 

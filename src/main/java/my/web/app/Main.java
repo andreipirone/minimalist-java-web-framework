@@ -1,38 +1,40 @@
 package my.web.app;
 import com.simple.framework.HttpFramework;
+import com.simple.framework.HttpStatus;
 
+import java.sql.SQLException;
 import java.util.Map;
 
 public class Main {
     public static void main( String[] args ) {
         HttpFramework app = new HttpFramework();
+        PersonRepository db = new PersonRepository("jdbc:postgresql://localhost:5432/testdb", "postgres","1234");
+        db.initDB();
 
         app.get("/", (req, res) -> {
             res.sendHTML("index.html");
-            res.send("app run");
         });
 
         app.post("/", (req, res) -> {
-            res.send("info sent");
-            Map<String, String> body = req.getBody();
-            System.out.print(body.get("lname") + " ");
-            System.out.println(body.get("fname"));
+            try{
+                Map<String, String> body = req.getBody();
+                String firstName = body.get("fname");
+                String lastName = body.get("lname");
+                int age = Integer.parseInt(body.get("age"));
+                db.insertValues(firstName, lastName, age);
+                res.sendStatus(HttpStatus.HTTP_200);
+            } catch (SQLException | NullPointerException e) {
+                res.sendStatus(HttpStatus.HTTP_500);
+            }
         });
 
-        app.get("/home", (req, res) -> {
-            res.send("hey");
-            Map<String, String> query = req.getQuery();
-            for(String key : query.keySet()){
-                System.out.println(key + " = " + query.get(key));
-            }
+        app.get("/all", (req, res) -> {
+            res.sendJson(db.getAll());
         });
 
         app.get("/details/{id}", (req, res) -> {
-            res.send("amogus");
             Map<String, String> params = req.getRouteParams();
-            for(String key : params.keySet()){
-                System.out.println(key + " = " + params.get(key));
-            }
+            res.sendJson(db.getOne(Integer.parseInt(params.get("id"))));
         });
 
         app.start(4221);

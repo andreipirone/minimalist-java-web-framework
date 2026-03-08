@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<link rel="stylesheet" href="css/styles.css">
+<link href="https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000&display=swap" rel="stylesheet">
+<body>
+<div class = "app-container">
+    <header>
+        <a class="navText" href="/">Example App</a>
+        <div class="navBtns">
+            <a class="btns" href="/">Add registration</a>
+            <a class="btns" href="/uploader">Upload</a>
+        </div>
+    </header>
+    <div class = "body-container">
+        <div class ="form-container">
+            <h2 id="title">Replace photo</h2>
+            <form action="/" method="post" enctype="multipart/form-data">
+<!--                <input id="txt" type="text">-->
+<!--                <label for="image">First name:</label><br>-->
+                <input id="image" name="photo" type="file"><br><br>
+                <input type="submit" value="Upload">
+            </form>
+        </div>
+        <div class="image-container">
+            <img src="img/cat.jpg"  alt="cat">
+        </div>
+    </div>
+</div>
+</body>
+<!--<script src="js/script.js"></script>-->
+</html>

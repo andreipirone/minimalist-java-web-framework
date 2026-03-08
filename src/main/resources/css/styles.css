@@ -102,6 +102,21 @@ header{
     margin-left: 20px;
 }
 
+.image-container{
+    flex: 66.66%;
+    display:flex;
+    background-color: #18181c;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+}
+
+.image-container img{
+    max-width: 50%;
+    max-height: auto;
+}
+
 .form-container input[type=text]{
     margin-top: 5px;
     margin-bottom: 10px;
@@ -132,13 +147,14 @@ header{
     padding-left: 10px;
 }
 
-.navBtns{
-    padding-left: 20px;
-}
+/*.navBtns{*/
+/*    padding-left: 20px;*/
+/*}*/
 
 .btns{
     font-family: "Google Sans Flex", sans-serif;
     color: white;
+    padding-left: 20px;
     text-decoration: none;
     font-weight: 300;
 }

@@ -13,9 +13,11 @@ public class Response {
     private Map<String, String> responseMap;
     private String contentType;
     private HttpStatus code;
+    private String staticPath;
 
-    public Response(BufferedOutputStream out) {
+    public Response(BufferedOutputStream out, String staticPath) {
         this.out = out;
+        this.staticPath = staticPath;
         this.responseMap = new LinkedHashMap<>();
     }
 
@@ -46,12 +48,16 @@ public class Response {
             this.code = HTTP_200;
         }
         String jsonBody = body.toString();
+        this.json(jsonBody);
+        this.build();
+    }
+
+    private void json(String jsonBody) throws IOException {
         this.responseMap.put("Status","HTTP/1.1 " + this.code.getDetails());
         this.responseMap.put("Content-Type", "application/json");
         this.responseMap.put("Content-Length", String.valueOf(jsonBody.getBytes(StandardCharsets.UTF_8).length));
         this.responseMap.put("Body", jsonBody);
         System.out.println(jsonBody);
-        this.build();
     }
 
     public void sendJson(JSONObject body) throws IOException {
@@ -59,32 +65,34 @@ public class Response {
             this.code = HTTP_200;
         }
         String jsonBody = body.toString();
-        this.responseMap.put("Status","HTTP/1.1 " + this.code.getDetails());
-        this.responseMap.put("Content-Type", "application/json");
-        this.responseMap.put("Content-Length", String.valueOf(jsonBody.getBytes(StandardCharsets.UTF_8).length));
-        this.responseMap.put("Body", jsonBody);
-        System.out.println(jsonBody);
+        this.json(jsonBody);
         this.build();
     }
 
-    public void sendHTML(String fileName) {
-        try(BufferedReader in = new BufferedReader(new FileReader("src/main/resources/" + fileName))){
-            File htmlFile = new File("src/main/resources/" + fileName);
-            if(htmlFile.exists()){
+    public void sendFile(String fileName) {
+        try(BufferedReader in = new BufferedReader(new FileReader(this.staticPath + fileName))){
+            File staticFile = new File(this.staticPath + fileName);
+            if(staticFile.exists()){
                 if(this.code == null){
                     this.code = HTTP_200;
                     this.responseMap.put("Status", "HTTP/1.1 " + this.code.getDetails());
                 }
 
-                StringBuilder htmlBody = new StringBuilder();
+                StringBuilder fileBody = new StringBuilder();
                 String line;
                 while((line = in.readLine()) != null){
-                    htmlBody.append(line).append("\n");
+                    fileBody.append(line).append("\n");
                 }
-
-                this.responseMap.put("Content-Type", "text/html; charset=UTF-8");
-                this.responseMap.put("Content-Length", String.valueOf(htmlBody.length()));
-                this.responseMap.put("Body", htmlBody.toString());
+                String extension = fileName.split("\\.")[1];
+                if(extension.equals("html")){
+                    this.responseMap.put("Content-Type", "text/html; charset=UTF-8");
+                } else if (extension.equals("js")) {
+                    this.responseMap.put("Content-Type", "text/javascript; charset=UTF-8");
+                } else if (extension.equals("css")) {
+                    this.responseMap.put("Content-Type", "text/css; charset=UTF-8");
+                }
+                this.responseMap.put("Content-Length", String.valueOf(fileBody.length()));
+                this.responseMap.put("Body", fileBody.toString());
 
                 this.build();
             } else {
@@ -122,11 +130,10 @@ public class Response {
             }
 
         response.append(CRLF);
-        response.append(this.responseMap.get("Body"));
+        out.write(response.toString().getBytes(StandardCharsets.UTF_8));
+//        response.append(this.responseMap.get("Body"));
 
-        byte[] rawData = response.toString().getBytes(java.nio.charset.StandardCharsets.UTF_8);
-
-        out.write(rawData);
+        out.write(this.responseMap.get("Body").getBytes(StandardCharsets.UTF_8));
         out.flush();
     }
 }

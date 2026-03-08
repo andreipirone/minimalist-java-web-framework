@@ -53,7 +53,7 @@ public class PersonRepository {
                 JSONObject personJson = new JSONObject(person);
                 personArray.put(personJson);
             }
-            System.out.println(personArray);
+            //System.out.println(personArray);
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }

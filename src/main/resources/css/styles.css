@@ -1,0 +1,201 @@
+body{
+    margin: auto;
+    height: 100%;
+    background-color: #121212;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+html{
+    height:100%;
+}
+
+header{
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    /*background-color: #1e1e1e;*/
+    background-color: #101113;
+    height:45px;
+    display: flex;
+    align-items: center;
+    padding: 0 0 0 0;
+}
+
+.app-container{
+    display:flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.body-container{
+    display: flex;
+    flex-direction:row;
+    flex-wrap: wrap;
+    height: 100%;
+}
+
+.table-container{
+    flex: 66.66%;
+    display:flex;
+    background-color: #18181c;
+    flex-direction: column;
+    padding: 10px;
+}
+
+.form-container{
+    flex: 33.33%;
+    color:white;
+    background-color: #1a1c20;
+    display: flex;
+    border-right: 2px solid #212428;
+    /*justify-content: center;*/
+    /*align-items: center;*/
+    flex-direction: column;
+    padding: 10px;
+}
+
+.form-container form{
+    border-radius: 5px;
+    /*background-color: #1e1e1e;*/
+    padding: 20px;
+}
+
+.form-container label{
+    font-family: "Google Sans Flex", sans-serif;
+    font-weight: 200;
+    font-size: 16px;
+    color: #858585;
+}
+
+.form-container input[type=text]:focus {
+    outline: none;
+    border: 1px solid #bb86fc;
+    box-shadow: 0 0 5px rgba(187, 134, 252, 0.5);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-container input[type=submit] {
+    font-family: "Google Sans Flex", sans-serif;
+    font-weight: 300;
+    padding: 10px 20px 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background-color: mediumpurple;
+    color: white;
+}
+
+.form-container input[type=submit]:hover {
+    background-color: #7859af;
+}
+
+.form-container input[type=submit]:focus {
+    border: 3px solid #533d78;
+    border-radius: 8px;
+}
+
+.form-container h2{
+    font-family: "Google Sans Flex", sans-serif;
+    font-weight: 400;
+    margin-left: 20px;
+}
+
+.form-container input[type=text]{
+    margin-top: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+    padding: 10px;
+    /*border: 2px;*/
+    border-width: 2px;
+    border-color: #27282c;
+    border-style: solid;
+    border-radius: 8px;
+    background-color: #16151a;
+    color: white;
+}
+
+.form-container input[type=text]::placeholder {
+    color: #79797b;
+    font-family: "Google Sans Flex", sans-serif;
+    font-weight: 200;
+    font-size: 16px;
+}
+
+.navText{
+    font-family: "Google Sans Flex", sans-serif;
+    color: white;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: large;
+    padding-left: 10px;
+}
+
+.navBtns{
+    padding-left: 20px;
+}
+
+.btns{
+    font-family: "Google Sans Flex", sans-serif;
+    color: white;
+    text-decoration: none;
+    font-weight: 300;
+}
+
+/*.google-sans-flex-<.navText> {*/
+/*                       font-family: "Google Sans Flex", sans-serif;*/
+/*                       font-optical-sizing: auto;*/
+/*                       font-weight: 500;*/
+/*                       font-style: normal;*/
+/*                       font-variation-settings:*/
+/*                               "slnt" 0,*/
+/*                               "wdth" 100,*/
+/*                               "GRAD" 0,*/
+/*                               "ROND" 0;*/
+/*                   }*/
+
+.navText:visited{
+    color: white;
+}
+
+table{
+    margin: 20px 10px 10px 10px;
+    border-collapse: collapse;
+}
+
+thead{
+    background-color: #1a1c20;
+    /*background-color: #1a1c20;*/
+    font-family: "Google Sans Flex", sans-serif;
+}
+
+tbody{
+    font-family: "Google Sans Flex", sans-serif;
+    font-weight: 300;
+    text-align: left;
+    color: white;
+    padding: 10px;
+}
+
+th{
+    font-weight: 400;
+    text-align: left;
+    color: white;
+    padding: 10px;
+}
+
+td, th {
+    border: 2px solid #27282c;
+    padding: 8px;
+}
+
+tr:nth-child(even){
+    background-color: #27282c;
+}
+
+tr:hover {
+    background-color: #393c43;
+}
+
+

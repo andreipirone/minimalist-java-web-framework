@@ -11,8 +11,10 @@ public class Main {
         PersonRepository db = new PersonRepository("jdbc:postgresql://localhost:5432/testdb", "postgres","1234");
         db.initDB();
 
+        app.setStaticPath("src/main/resources/");
+
         app.get("/", (req, res) -> {
-            res.sendHTML("index.html");
+            res.sendFile("index.html");
         });
 
         app.post("/", (req, res) -> {
@@ -22,7 +24,7 @@ public class Main {
                 String lastName = body.get("lname");
                 int age = Integer.parseInt(body.get("age"));
                 db.insertValues(firstName, lastName, age);
-                res.sendStatus(HttpStatus.HTTP_200);
+                res.sendFile("index.html");
             } catch (SQLException | NullPointerException e) {
                 res.sendStatus(HttpStatus.HTTP_500);
             }

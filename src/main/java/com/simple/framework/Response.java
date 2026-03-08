@@ -2,6 +2,8 @@ package com.simple.framework;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.json.*;
@@ -78,28 +80,77 @@ public class Response {
                     this.responseMap.put("Status", "HTTP/1.1 " + this.code.getDetails());
                 }
 
-                StringBuilder fileBody = new StringBuilder();
-                String line;
-                while((line = in.readLine()) != null){
-                    fileBody.append(line).append("\n");
-                }
                 String extension = fileName.split("\\.")[1];
                 if(extension.equals("html")){
                     this.responseMap.put("Content-Type", "text/html; charset=UTF-8");
+                    txt(in);
                 } else if (extension.equals("js")) {
                     this.responseMap.put("Content-Type", "text/javascript; charset=UTF-8");
+                    txt(in);
                 } else if (extension.equals("css")) {
                     this.responseMap.put("Content-Type", "text/css; charset=UTF-8");
+                    txt(in);
+                } else if (extension.equals("jpg") || extension.equals("jpeg")){
+                    this.responseMap.put("Content-Type", "image/jpg");
+                    this.image(this.staticPath + fileName);
                 }
-                this.responseMap.put("Content-Length", String.valueOf(fileBody.length()));
-                this.responseMap.put("Body", fileBody.toString());
-
-                this.build();
             } else {
                 this.sendStatus(HTTP_500);
             }
         } catch (IOException e) {
             System.out.println("IOException: " + e.getMessage());
+        }
+    }
+
+    public void txt(BufferedReader in) throws IOException {
+        StringBuilder fileBody = new StringBuilder();
+        String line;
+        while((line = in.readLine()) != null){
+            fileBody.append(line).append("\n");
+        }
+
+        this.responseMap.put("Content-Length", String.valueOf(fileBody.length()));
+        this.responseMap.put("Body", fileBody.toString());
+
+        this.build();
+    }
+
+    public void image(String imgPath) throws IOException {
+        File imageFile = new File(imgPath);
+
+        try (FileInputStream fis = new FileInputStream(imageFile)) {
+            responseMap.put("Content-Length", String.valueOf(imageFile.length()));
+
+            StringBuilder response = new StringBuilder();
+            String CRLF = "\r\n";
+
+            String status = this.responseMap.get("Status");
+            if (status == null) {
+                status = "HTTP/1.1 200 OK";
+            }
+            response.append(status).append(CRLF);
+
+            for(String key : this.responseMap.keySet()){
+                if(!key.equals("Body") && !key.equals("Status")){
+                    response.append(key)
+                            .append(": ")
+                            .append(this.responseMap.get(key))
+                            .append(CRLF);
+                }
+            }
+
+            response.append(CRLF);
+
+            out.write(response.toString().getBytes(StandardCharsets.UTF_8));
+
+            byte[] buffer = new byte[8192]; // 8KB buffer
+            int bytesRead;
+            while ((bytesRead = fis.read(buffer)) != -1) {
+                out.write(buffer, 0, bytesRead);
+            }
+            out.flush();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
@@ -115,7 +166,6 @@ public class Response {
 
         String status = this.responseMap.get("Status");
         if (status == null) {
-            // Fallback if send() didn't set it
             status = "HTTP/1.1 200 OK";
         }
         response.append(status).append(CRLF);
@@ -131,9 +181,9 @@ public class Response {
 
         response.append(CRLF);
         out.write(response.toString().getBytes(StandardCharsets.UTF_8));
-//        response.append(this.responseMap.get("Body"));
 
         out.write(this.responseMap.get("Body").getBytes(StandardCharsets.UTF_8));
         out.flush();
     }
+
 }

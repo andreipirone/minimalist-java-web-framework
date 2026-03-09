@@ -58,7 +58,7 @@ public class Main {
 
 2. Receiving static files
 
-![example2](https://github.com/andreipirone/minimalist-java-web-framework/blob/main/media/example2.gif?raw=true)
+![example2](https://github.com/andreipirone/minimalist-java-web-framework/blob/main/media/example2.gif)
 
 ## WARNING!
 

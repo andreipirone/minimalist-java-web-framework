@@ -2,8 +2,6 @@ package com.simple.framework;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import org.json.*;
@@ -15,7 +13,7 @@ public class Response {
     private Map<String, String> responseMap;
     private String contentType;
     private HttpStatus code;
-    private String staticPath;
+    private final String staticPath;
 
     public Response(BufferedOutputStream out, String staticPath) {
         this.out = out;
@@ -54,12 +52,12 @@ public class Response {
         this.build();
     }
 
-    private void json(String jsonBody) throws IOException {
+    private void json(String jsonBody) {
         this.responseMap.put("Status","HTTP/1.1 " + this.code.getDetails());
         this.responseMap.put("Content-Type", "application/json");
         this.responseMap.put("Content-Length", String.valueOf(jsonBody.getBytes(StandardCharsets.UTF_8).length));
         this.responseMap.put("Body", jsonBody);
-        System.out.println(jsonBody);
+        //System.out.println(jsonBody);
     }
 
     public void sendJson(JSONObject body) throws IOException {
@@ -81,18 +79,23 @@ public class Response {
                 }
 
                 String extension = fileName.split("\\.")[1];
-                if(extension.equals("html")){
-                    this.responseMap.put("Content-Type", "text/html; charset=UTF-8");
-                    txt(in);
-                } else if (extension.equals("js")) {
-                    this.responseMap.put("Content-Type", "text/javascript; charset=UTF-8");
-                    txt(in);
-                } else if (extension.equals("css")) {
-                    this.responseMap.put("Content-Type", "text/css; charset=UTF-8");
-                    txt(in);
-                } else if (extension.equals("jpg") || extension.equals("jpeg")){
-                    this.responseMap.put("Content-Type", "image/jpg");
-                    this.image(this.staticPath + fileName);
+                switch (extension) {
+                    case "html" -> {
+                        this.responseMap.put("Content-Type", "text/html; charset=UTF-8");
+                        txt(in);
+                    }
+                    case "js" -> {
+                        this.responseMap.put("Content-Type", "text/javascript; charset=UTF-8");
+                        txt(in);
+                    }
+                    case "css" -> {
+                        this.responseMap.put("Content-Type", "text/css; charset=UTF-8");
+                        txt(in);
+                    }
+                    case "jpg", "jpeg" -> {
+                        this.responseMap.put("Content-Type", "image/jpg");
+                        this.image(this.staticPath + fileName);
+                    }
                 }
             } else {
                 this.sendStatus(HTTP_500);
@@ -102,7 +105,7 @@ public class Response {
         }
     }
 
-    public void txt(BufferedReader in) throws IOException {
+    private void txt(BufferedReader in) throws IOException {
         StringBuilder fileBody = new StringBuilder();
         String line;
         while((line = in.readLine()) != null){
@@ -115,7 +118,7 @@ public class Response {
         this.build();
     }
 
-    public void image(String imgPath) throws IOException {
+    private void image(String imgPath) throws IOException {
         File imageFile = new File(imgPath);
 
         try (FileInputStream fis = new FileInputStream(imageFile)) {
@@ -150,7 +153,7 @@ public class Response {
             }
             out.flush();
         } catch (IOException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());;
         }
     }
 

@@ -1,12 +1,14 @@
 package com.simple.framework;
 
+import org.json.JSONArray;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class HttpParser {
+class HttpParser {
     private Map<String, String> requestMap;
     private Map<String,String[]> urlVariables = new HashMap<>();
     private Map<String, String> paramsMap = new HashMap<>();
@@ -33,7 +35,7 @@ public class HttpParser {
         String line;
         line = in.readLine();
         String[] firstLine = line.split("\\s+");
-        System.out.println(line);
+        //System.out.println(line);
 
         this.requestMap.put("Method", firstLine[0]);
         String url = firstLine[1];
@@ -50,14 +52,53 @@ public class HttpParser {
         while((line = in.readLine()) != null && !line.isEmpty()){
             String[] tempLine = line.split(":", 2);
             this.requestMap.put(tempLine[0].trim(), tempLine[1].trim());
+            //System.out.println(line);
         }
 
         if(this.requestMap.containsKey("Content-Length")){
-            int bodySize = Integer.parseInt(this.requestMap.get("Content-Length"));
+            if(!this.requestMap.get("Content-Type").contains("multipart/form-data")) {
+                int bodySize = Integer.parseInt(this.requestMap.get("Content-Length"));
 
-            char[] body = new char[bodySize];
-            in.read(body, 0, bodySize);
-            this.requestMap.put("Body", String.valueOf(body));
+                char[] body = new char[bodySize];
+                in.read(body, 0, bodySize);
+                //System.out.println(String.valueOf(body));
+                this.requestMap.put("Body", String.valueOf(body));
+//            } else {
+//                JSONArray multipartJSON;
+//                String boundary = this.requestMap.get("Content-Type").split(" ")[1].split("=")[1];
+//                int readSize = 0;
+//                int bodySize = Integer.parseInt(this.requestMap.get("Content-Length"));
+//                while(readSize < bodySize) {
+//                    Map<String, String> tempMap = new HashMap<>();
+//                    //String boundary = in.readLine();
+//
+//                    while ((line = in.readLine()) != null && !line.isEmpty()) {
+//                        String[] tempLine = line.split(":", 2);
+//                        if(tempLine[0].equals("Content-Disposition")){
+//                            String[] data = tempLine[1].trim().split("; ");
+//                            for(int i = 1; i < data.length; i++){
+//                                String[] pair = data[i].split("=");
+//                                tempMap.put(pair[0], pair[1]);
+//                            }
+//                        } else if (tempLine[0].equals("Content-Type")) {
+//                            tempMap.put(tempLine[0], tempLine[1]);
+//                        }
+//
+//                        if(tempMap.get("Content-Type").contains("image/jpeg")){
+//                            while ((line = in.readLine()) != null && !line.isEmpty()) {
+//                                byte[] body = new byte[bodySize];
+//
+//                                int bytesRead = 0;
+//                                  while (bytesRead < bodySize) {
+//                                      int result = in.read(body, bytesRead, bodySize - bytesRead);
+//                                      if (result == -1) break; // Stream ended early
+//                                      bytesRead += result;
+//                                  }
+//                            }
+//                        }
+//                    }
+//                }
+            }
         }
 
         return this.requestMap;
@@ -80,7 +121,7 @@ public class HttpParser {
         }
 
 
-        matchesList.forEach((i) -> System.out.println(i));
+        //matchesList.forEach((i) -> System.out.println(i));
         String regexPath = urlTemplate.replaceAll("\\{[^}]+\\}", "([^/]+)");
 
         if(isNonStatic){

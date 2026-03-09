@@ -19,7 +19,7 @@ public class Request {
 
     public Map<String, String> getBody(){
         String body = this.requestMap.get("Body");
-        System.out.println(body);
+        //System.out.println(body);
         if(this.requestMap.get("Content-Type").contains("application/x-www-form-urlencoded")){
             this.bodyMap = urlencoded(body);
         } else if (this.requestMap.get("Content-Type").contains("application/json")) {
@@ -29,7 +29,7 @@ public class Request {
         return this.bodyMap;
     }
 
-    public Map<String, String> urlencoded(String body){
+    private Map<String, String> urlencoded(String body){
         Map<String, String> tempMap = new HashMap<>();
         String[] variables = body.split("&");
 
@@ -41,7 +41,7 @@ public class Request {
         return  tempMap;
     }
 
-    public Map<String, String> json(String body){
+    private Map<String, String> json(String body){
         Map<String, String> tempMap = new HashMap<>();
         JSONObject tempJson = new JSONObject(body);
         for(String key : tempJson.keySet()) {
@@ -66,6 +66,10 @@ public class Request {
         }
 
         return this.queryMap;
+    }
+
+    public String getParam(String key) throws NullPointerException {
+        return this.paramMap.get(key);
     }
 
     public void setParamMap(Map<String, String> paramMap) {

@@ -12,10 +12,20 @@ public class Main {
         db.initDB();
 
         app.setStaticPath("src/main/resources/");
+        app.setThreadPoolSize(5);
 
         app.get("/", (req, res) -> {
             res.sendFile("index.html");
         });
+
+        app.get("/upload", (req, res) -> {
+            res.sendFile("upload.html");
+        });
+
+        app.post("/upload", (req, res) -> {
+            System.out.println("hi");
+        });
+
 
         app.post("/", (req, res) -> {
             try{
@@ -35,8 +45,8 @@ public class Main {
         });
 
         app.get("/details/{id}", (req, res) -> {
-            Map<String, String> params = req.getRouteParams();
-            res.sendJson(db.getOne(Integer.parseInt(params.get("id"))));
+            String id = req.getParam("id");
+            res.sendJson(db.getOne(Integer.parseInt(id)));
         });
 
         app.start(4221);

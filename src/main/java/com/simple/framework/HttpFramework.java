@@ -28,13 +28,13 @@ public class HttpFramework {
     }
 
     public void get(String path, Handler serverHandler){
-        System.out.println(path);
+        //System.out.println(path);
         String processedPath = this.parser.extractParams(path, true);
         this.getHandlers.put(processedPath, serverHandler);
     }
 
     public void post(String path, Handler serverHandler){
-        System.out.println(path);
+        //System.out.println(path);
         String processedPath = this.parser.extractParams(path, true);
         this.postHandlers.put(processedPath, serverHandler);
     }
@@ -48,30 +48,19 @@ public class HttpFramework {
                         String filePath = file.toString();
                         filePath = filePath.replaceAll("\\\\", "/");
                         filePath = "/"+ filePath.replaceAll(path, "");
-                        System.out.println(filePath);
+                        //System.out.println(filePath);
                         String processedPath = parser.extractParams(filePath, true);
                         String finalFilePath = filePath;
-                        System.out.println(filePath);
+                        //System.out.println(filePath);
                         this.getHandlers.put(processedPath, (req, res) -> res.sendFile(finalFilePath));
                     });
         } catch (Exception e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
-//        File dir = new File(path);
-//
-//        File[] files = dir.listFiles();
-//        for (int i = 0; i < files.length; i++){
-//            if (files[i].isFile()){
-//               String filePath = files[i].getPath();
-//                System.out.println(filePath);
-//                System.out.println(filePath.substring(filePath.lastIndexOf("\\")));
-//                filePath = "/" + filePath.substring(filePath.lastIndexOf("\\") + 1);
-//                String processedPath = parser.extractParams(filePath, true);
-//                String finalFilePath = filePath;
-//                //System.out.println(filePath);
-//                this.getHandlers.put(processedPath, (req, res) -> res.sendFile(finalFilePath));
-//            }
-//        }
+    }
+
+    public void setThreadPoolSize(int size){
+        this.THREAD_POOL_SIZE = size;
     }
 
 

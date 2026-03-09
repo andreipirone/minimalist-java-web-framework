@@ -5,18 +5,6 @@ A lightweight web framework built from scratch using Java's `ServerSocket`. This
 * JDK 11 or higher
 * Maven
 
-### Features
-- [x] ExpressJS-like syntax
-- [x] Dynamic path parameters parsing
-- [x] Query and body parsing
-- [x] Static file server
-- [x] Concurrency
-- [x] Partial error handling
-- [ ] multipart/form-data parsing (in progress)
-- [ ] SSL/TLS Support
-- [ ] Auth/Logging Middleware
-- [ ] Cookies
-
 ### Usage
 ```java
 import com.simple.framework.HttpFramework;
@@ -50,3 +38,28 @@ public class Main {
     }
 }
 ```
+
+### Features
+- [x] ExpressJS-like syntax
+- [x] Dynamic path parameters parsing
+- [x] Query and body parsing
+- [x] Static file serving
+- [x] Concurrency
+- [x] Partial error handling
+- [ ] multipart/form-data parsing (in progress)
+- [ ] SSL/TLS Support
+- [ ] Auth/Logging Middleware
+- [ ] Cookies
+
+### Examples
+1. Adding data to the database.
+
+![example1](https://github.com/andreipirone/minimalist-java-web-framework/blob/main/media/example1.gif)
+
+2. Receiving static files
+
+![example2](https://github.com/andreipirone/minimalist-java-web-framework/blob/main/media/example2.gif?raw=true)
+
+## WARNING!
+
+> This framework is currently intended for educational purposes only. It does not currently support SSL/TLS (HTTPS). All data sent is unencrypted and visible to anyone on the same network. Do not use this to handle sensitive data (passwords, PII, etc.).
